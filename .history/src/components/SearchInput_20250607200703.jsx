@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+
 export const SearchInput = ({ updateInput }) => {
   const ref = useRef(null);
   const handleChange = (event) => {
