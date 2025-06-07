@@ -1,0 +1,66 @@
+import React, { useCallback, useState } from "react";
+
+import "./App.css";
+import { SearchInput } from "./components/SearchInput";
+import { CounterButton } from "./components/CounterButton";
+import { ItemList } from "./components/ItemList";
+/**Создать приложение, которое использует хуки `useCallback` и `useMemo` для оптимизации рендеринга компонентов. Приложение будет состоять из списка элементов (> 100), поля поиска и кнопки-счетчика, при этом следует минимизировать количество рендеров.
+
+### Функциональные требования:
+
+1. **Компонент `App`**:
+    - Родительский компонент, который управляет состояниями поиска и счетчика.
+    - Включает следующие дочерние компоненты:
+        - Поле поиска (`SearchInput`)
+        - Список элементов (`ItemList`)
+        - Кнопка для увеличения счетчика (`CounterButton`)
+2. **Компонент `SearchInput`**:
+    - Рендерит текстовое поле, которое позволяет пользователю вводить текст для поиска по списку.
+    - Ввод текста в поле поиска должен обновлять состояние поиска в родительском компоненте.
+    - Использовать `useCallback` для передачи функции изменения состояния в дочерний компонент.
+3. **Компонент `ItemList`**:
+    - Получает список элементов и значение поиска как пропсы.
+    - Фильтрует список на основе значения поиска.
+    - Результат фильтрации должен быть мемоизирован с помощью `useMemo`, чтобы избежать лишних вычислений при каждом рендере.
+4. **Компонент `CounterButton`**:
+    - Рендерит кнопку для увеличения счетчика.
+    - При нажатии на кнопку увеличивается состояние счетчика в родительском компоненте.
+    - Функция обновления счетчика должна быть мемоизирована с помощью `useCallback`, чтобы избежать лишних ререндеров дочерних компонентов. */
+function App() {
+  const [stateInput, setStateInput] = useState("");
+  const [count, setCount] = useState(0);
+  const people = [
+    { name: "Savanna", age: 12, module: "React" },
+    { name: "Anna", age: 10, module: "JavaScript" },
+    { name: "Andrei", age: 7, module: "React" },
+    { name: "Alex", age: 19, module: "React" },
+    { name: "Igor", age: 18, module: "React" },
+    { name: "Kate", age: 12, module: "JavaScript" },
+    { name: "Kate", age: 22, module: "JavaScript" },
+    { name: "Alex", age: 19, module: "RTC" },
+    { name: "Nikita", age: 100, module: "Redux" },
+    { name: "Pavel", age: 97, module: "Redux" },
+  ];
+  const updateInput = useCallback(
+    (value) => {
+      setStateInput(value);
+    },
+    [stateInput]
+  );
+  const updateCount = useCallback(
+    (value) => {
+      setCount(value);
+    },
+    [count]
+  );
+  return (
+    <>
+      <SearchInput updateInput={updateInput} />
+      <CounterButton updateCount={updateCount} style={{ padding: "14px" }} />
+      {count}
+      <ItemList people={people} stateInput={stateInput} />
+    </>
+  );
+}
+
+export default App;
